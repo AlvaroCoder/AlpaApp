@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}AgroRota – Rotación{% endblock %}
+
+{% block navbar_actions %}
+<button class="btn-salir" onclick="location.href='/'">Salir del registro</button>
+{% endblock %}
+
+{% block stepper %}
+<div class="stepper">
+  <span class="stepper-label">{{ tipo }}</span>
+  <div class="step done">
+    <div class="step-num">✓</div>
+    <span class="step-name">Ubicación</span>
+  </div>
+  <div class="step-sep"></div>
+  <div class="step done">
+    <div class="step-num">✓</div>
+    <span class="step-name">Cultivo</span>
+  </div>
+  <div class="step-sep"></div>
+  <div class="step active">
+    <div class="step-num">3</div>
+    <span class="step-name">Rotación</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="/registro/transitorio/rotacion" id="rotacion-form">
+  <input type="hidden" name="rotacion"         id="rotacion-input"  value="{{ datos.rotacion or '' }}" />
+  <input type="hidden" name="cultivo_anterior" id="anterior-input"  value="{{ datos.cultivo_anterior or '' }}" />
+
+  <div class="rotacion-container">
+
+    <!-- Main card -->
+    <div class="card rotacion-card">
+      <h2>¿Ya has sembrado por rotación en esta parcela?</h2>
+      <p>Rotar es cambiar de cultivo en cada campaña, por ejemplo papa, luego frijol y luego maíz.</p>
+
+      <div class="opciones-rotacion">
+        <button type="button" class="opcion-btn {% if datos.rotacion == 'si' %}selected{% endif %}"
+                onclick="selectRotacion('si')">
+          <div class="opcion-title">Sí</div>
+          <div class="opcion-sub">Ya cambio de cultivo</div>
+        </button>
+        <button type="button" class="opcion-btn {% if datos.rotacion == 'no' %}selected{% endif %}"
+                onclick="selectRotacion('no')">
+          <div class="opcion-title">No</div>
+          <div class="opcion-sub">Siembro lo mismo</div>
+        </button>
+        <button type="button" class="opcion-btn {% if datos.rotacion == 'no_se' %}selected{% endif %}"
+                onclick="selectRotacion('no_se')">
+          <div class="opcion-title">No sé</div>
+          <div class="opcion-sub">Explícame</div>
+        </button>
+      </div>
+
+      <div id="anterior-section" style="display:{% if datos.rotacion == 'si' %}block{% else %}none{% endif %};">
+        <p class="anterior-title">¿Qué sembraste en la campaña anterior?</p>
+        <div class="chips">
+          {% for ca in cultivos_anteriores %}
+          <button
+            type="button"
+            class="chip {% if datos.cultivo_anterior == ca %}selected{% endif %}"
+            onclick="selectAnterior('{{ ca }}')"
+          >{{ ca }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="rotacion-footer">
+        <a href="/registro/transitorio/cultivo" class="btn btn-secondary">Atrás</a>
+        <button type="submit" class="btn btn-primary">Guardar y ver mi plan</button>
+      </div>
+    </div>
+
+    <!-- Summary card -->
+    <div class="card resumen-card">
+      <h3>Tu registro</h3>
+      <div class="resumen-row">
+        <div class="r-label">Parcela</div>
+        <div class="r-value">{{ datos.parcela_nombre }} · {{ "%.1f"|format(datos.area_ha or 0) }} ha</div>
+      </div>
+      <div class="resumen-row">
+        <div class="r-label">Ubicación</div>
+        <div class="r-value">{{ datos.ubicacion_texto or "—" }}</div>
+      </div>
+      <div class="resumen-row">
+        <div class="r-label">Cultivo</div>
+        <div class="r-value">{{ datos.cultivo_nombre or "—" }}</div>
+      </div>
+      <a class="resumen-edit" href="/registro/transitorio/ubicacion">Editar datos</a>
+    </div>
+
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function selectRotacion(val) {
+    document.querySelectorAll(".opcion-btn").forEach(b => b.classList.remove("selected"));
+    document.querySelector(`.opcion-btn[onclick="selectRotacion('${val}')"]`).classList.add("selected");
+    document.getElementById("rotacion-input").value = val;
+    document.getElementById("anterior-section").style.display = val === "si" ? "block" : "none";
+  }
+
+  function selectAnterior(val) {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("selected"));
+    document.querySelector(`.chip[onclick="selectAnterior('${val}')"]`).classList.add("selected");
+    document.getElementById("anterior-input").value = val;
+  }
+</script>
+{% endblock %}

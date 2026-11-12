@@ -1,0 +1,22 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+jinja2==3.1.4
+python-multipart==0.0.12
+pydantic==2.10.3
+pydantic-settings==2.6.1
+sqlalchemy==2.0.36
+aiosqlite==0.20.0
+httpx==0.28.1
+python-dotenv==1.0.1
+
+# Deep Learning / Image Recognition
+torch==2.5.1
+torchvision==0.20.1
+pillow==11.0.0
+numpy==2.1.3
+opencv-python==4.10.0.84
+scikit-learn==1.5.2
+
+# Geospatial
+shapely==2.0.6
+geopy==2.4.1

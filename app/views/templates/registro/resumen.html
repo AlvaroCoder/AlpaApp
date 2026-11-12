@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}AgroRota – Registro guardado{% endblock %}
+
+{% block content %}
+<div style="max-width:600px; margin:3rem auto; padding:0 1.5rem; text-align:center;">
+  <div style="font-size:3rem;">✅</div>
+  <h2 style="font-size:1.6rem; font-weight:800; color:var(--green-dark); margin:.75rem 0 .4rem;">¡Registro guardado!</h2>
+  <p style="color:var(--text-mid);">Tu parcela <strong>{{ datos.parcela_nombre }}</strong> con
+    <strong>{{ datos.cultivo_nombre }}</strong> fue registrada correctamente.</p>
+  <div class="card" style="margin-top:1.5rem; text-align:left;">
+    <div class="resumen-row" style="margin-bottom:.75rem;">
+      <div class="r-label">Parcela</div>
+      <div class="r-value">{{ datos.parcela_nombre }} · {{ "%.1f"|format(datos.area_ha or 0) }} ha</div>
+    </div>
+    <div class="resumen-row" style="margin-bottom:.75rem;">
+      <div class="r-label">Ubicación</div>
+      <div class="r-value">{{ datos.ubicacion_texto or "—" }}</div>
+    </div>
+    <div class="resumen-row" style="margin-bottom:.75rem;">
+      <div class="r-label">Cultivo</div>
+      <div class="r-value">{{ datos.cultivo_nombre or "—" }}</div>
+    </div>
+    <div class="resumen-row">
+      <div class="r-label">Rotación</div>
+      <div class="r-value">
+        {% if datos.rotacion == "si" %}Sí – cultivo anterior: {{ datos.cultivo_anterior or "—" }}
+        {% elif datos.rotacion == "no" %}No
+        {% else %}No sé
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <a href="/" class="btn btn-primary" style="margin-top:1.5rem; display:inline-block;">Volver al inicio</a>
+</div>
+{% endblock %}

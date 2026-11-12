@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}AgroRota – Cultivo{% endblock %}
+
+{% block navbar_actions %}
+<button class="btn-salir" onclick="location.href='/'">Salir del registro</button>
+{% endblock %}
+
+{% block stepper %}
+<div class="stepper">
+  <span class="stepper-label">{{ tipo }} · {{ datos.parcela_nombre }} ({{ "%.1f"|format(datos.area_ha or 0) }} ha)</span>
+  <div class="step done">
+    <div class="step-num">✓</div>
+    <span class="step-name">Ubicación</span>
+  </div>
+  <div class="step-sep"></div>
+  <div class="step active">
+    <div class="step-num">2</div>
+    <span class="step-name">Cultivo</span>
+  </div>
+  <div class="step-sep"></div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <span class="step-name">Rotación</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="/registro/transitorio/cultivo" id="cultivo-form">
+  <input type="hidden" name="cultivo_id" id="cultivo-id-input" value="{{ datos.cultivo_id or '' }}" />
+
+  <div class="cultivo-container">
+    <div class="cultivo-header">
+      <div>
+        <h2>¿Qué quieres sembrar?</h2>
+        <p>Elige un cultivo transitorio para esta parcela.</p>
+      </div>
+      <div>
+        <input
+          type="text"
+          class="input-search"
+          id="cultivo-search"
+          placeholder="Buscar cultivo"
+          style="width:260px;"
+          oninput="filterCultivos(this.value)"
+        />
+      </div>
+    </div>
+
+    <div class="cultivo-grid" id="cultivo-grid">
+      {% for c in cultivos %}
+      <div
+        class="cultivo-card {% if datos.cultivo_id == c.id %}selected{% endif %}"
+        data-id="{{ c.id }}"
+        data-nombre="{{ c.nombre }}"
+        onclick="selectCultivo('{{ c.id }}', '{{ c.nombre }}')"
+      >
+        <div class="cultivo-card-check">✓</div>
+        <div class="cultivo-icon-wrap" style="background:{{ c.color_bg }};">
+          <span style="color:{{ c.color_icon }}; font-size:1.5rem;">🌾</span>
+        </div>
+        <div class="cultivo-name">{{ c.nombre }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="cultivo-footer">
+      <div class="elegido-label" id="elegido-label">
+        {% if datos.cultivo_nombre %}
+          Elegido: <strong>{{ datos.cultivo_nombre }}</strong>
+        {% endif %}
+      </div>
+      <div style="display:flex; gap:.75rem;">
+        <a href="/registro/transitorio/ubicacion" class="btn btn-secondary">Atrás</a>
+        <button type="submit" class="btn btn-primary" id="btn-siguiente" {% if not datos.cultivo_id %}disabled{% endif %}>
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function selectCultivo(id, nombre) {
+    document.querySelectorAll(".cultivo-card").forEach(c => c.classList.remove("selected"));
+    document.querySelector(`.cultivo-card[data-id="${id}"]`).classList.add("selected");
+    document.getElementById("cultivo-id-input").value = id;
+    document.getElementById("elegido-label").innerHTML = `Elegido: <strong>${nombre}</strong>`;
+    document.getElementById("btn-siguiente").removeAttribute("disabled");
+  }
+
+  function filterCultivos(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll(".cultivo-card").forEach(c => {
+      const match = c.dataset.nombre.toLowerCase().includes(q);
+      c.style.display = match ? "" : "none";
+    });
+  }
+</script>
+{% endblock %}

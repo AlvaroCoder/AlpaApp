@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}AgroRota – Ubicación y área{% endblock %}
+
+{% block head %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet.draw CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+<style>
+  body { overflow: hidden; }
+  @media (max-width: 768px) { body { overflow: auto; } }
+</style>
+{% endblock %}
+
+{% block navbar_actions %}
+<button class="btn-salir" onclick="location.href='/'">Salir del registro</button>
+{% endblock %}
+
+{% block stepper %}
+<div class="stepper">
+  <span class="stepper-label">{{ tipo }}</span>
+  <div class="step active">
+    <div class="step-num">1</div>
+    <span class="step-name">Ubicación</span>
+  </div>
+  <div class="step-sep"></div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <span class="step-name">Cultivo</span>
+  </div>
+  <div class="step-sep"></div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <span class="step-name">Rotación</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="/registro/transitorio/ubicacion" id="ubicacion-form">
+  <input type="hidden" name="geojson"           id="geojson-input"        value="" />
+  <input type="hidden" name="lat"               id="lat-input"            value="" />
+  <input type="hidden" name="lng"               id="lng-input"            value="" />
+  <input type="hidden" name="area_ha"           id="area-ha-input"        value="0.00" />
+  <input type="hidden" name="ubicacion_texto"   id="ubicacion-texto-input" value="" />
+
+  <div class="registro-layout">
+
+    <!-- ── LEFT PANEL ── -->
+    <aside class="registro-panel">
+      <h2>¿Dónde está tu parcela?</h2>
+
+      <div>
+        <label>Busca tu distrito o caserío</label>
+        <div style="position:relative; margin-top:.4rem;">
+          <input
+            type="text"
+            class="input-search"
+            id="search-input"
+            placeholder="Chulucanas, Morropón, Pi…"
+            onkeydown="if(event.key==='Enter'){event.preventDefault(); geocodeSearch(this.value);}"
+          />
+        </div>
+      </div>
+
+      <button type="button" class="btn-location" onclick="useCurrentLocation()">
+        ＋ Usar mi ubicación actual
+      </button>
+
+      <div class="instrucciones">
+        <h4>Marca tu parcela</h4>
+        <ol>
+          <li>Acerca el mapa hasta ver tu terreno.</li>
+          <li>Toca <strong>Dibujar parcela</strong> y arrastra el cuadrado.</li>
+          <li>Mueve las esquinas para ajustarlo.</li>
+        </ol>
+      </div>
+
+      <div class="area-info">
+        <div>
+          <div class="area-value" id="area-display">0.00</div>
+          <div class="area-unit">ha</div>
+        </div>
+        <div class="area-nombre">
+          <label>Nombre</label>
+          <input
+            type="text"
+            class="input-text"
+            name="parcela_nombre"
+            value="{{ datos.parcela_nombre or 'Parcela 1' }}"
+            placeholder="Parcela 1"
+          />
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <a href="/" class="btn btn-secondary">Atrás</a>
+        <button type="submit" class="btn btn-primary" style="flex:1;">Siguiente</button>
+      </div>
+    </aside>
+
+    <!-- ── MAP ── -->
+    <div class="map-wrapper">
+      <!-- Mapa / Satélite toggle -->
+      <div class="map-toggle">
+        <button type="button" class="active" data-layer="map"       onclick="toggleLayer('map')">Mapa</button>
+        <button type="button"               data-layer="satellite"  onclick="toggleLayer('satellite')">Satélite</button>
+      </div>
+
+      <div id="map"></div>
+
+      <!-- Draw actions -->
+      <div class="map-actions">
+        <button type="button" class="btn btn-primary" onclick="startDraw()">
+          ⬛ Dibujar parcela
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="clearDraw()">Borrar</button>
+      </div>
+    </div>
+
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<script src="/static/js/map.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const lat = {{ datos.lat or "null" }};
+    const lng = {{ datos.lng or "null" }};
+    initMap(lat, lng);
+
+    // Restore existing area
+    const savedArea = "{{ datos.area_ha or '' }}";
+    if (savedArea && savedArea !== "0.0") {
+      document.getElementById("area-display").textContent = parseFloat(savedArea).toFixed(2);
+    }
+  });
+</script>
+{% endblock %}

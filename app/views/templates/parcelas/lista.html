@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}AgroRota – Mis parcelas{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:2rem auto; padding:0 1.5rem;">
+  <h2 style="font-size:1.5rem; font-weight:800; color:var(--green-dark); margin-bottom:1.25rem;">Mis parcelas</h2>
+  {% if parcelas %}
+    <div style="display:flex; flex-direction:column; gap:.75rem;">
+      {% for p in parcelas %}
+        <div class="card">{{ p.nombre }} – {{ p.area_ha }} ha</div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card" style="text-align:center; padding:2.5rem;">
+      <p style="color:var(--text-muted);">Aún no tienes parcelas registradas.</p>
+      <a href="/" class="btn btn-primary" style="margin-top:1rem;">Registrar ahora</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

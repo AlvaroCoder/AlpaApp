@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}AgroRota{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+{% block navbar %}
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="navbar-logo">🌱</div>
+    AgroRota
+  </a>
+  <div class="navbar-actions">
+    {% block navbar_actions %}
+    <button class="btn-escuchar">🔊 Escuchar</button>
+    <div class="avatar">JR</div>
+    {% endblock %}
+  </div>
+</nav>
+{% endblock %}
+
+{% block stepper %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}AgroRota – Inicio{% endblock %}
+
+{% block content %}
+<main class="home-container">
+  <h1 class="home-title">Hola, {{ usuario }}</h1>
+  <p class="home-subtitle">¿Qué quieres registrar hoy?</p>
+
+  <div class="home-cards">
+    <!-- Card: Sembrado transitorio -->
+    <div class="home-card">
+      <div class="home-card-icon icon-green">🌾</div>
+      <div>
+        <h2 class="home-card-title">Registrar sembrado transitorio</h2>
+        <p class="home-card-desc">Cultivos de una campaña: arroz, maíz, trigo, sorgo, cebada.</p>
+      </div>
+      <div>
+        <a href="/registro/transitorio/ubicacion" class="btn btn-primary">Empezar</a>
+      </div>
+    </div>
+
+    <!-- Card: Historial -->
+    <div class="home-card">
+      <div class="home-card-icon icon-amber">📍</div>
+      <div>
+        <h2 class="home-card-title">Historial</h2>
+        <p class="home-card-desc">Frutales y cultivos de varios años: limón, mango, plátano, cacao.</p>
+      </div>
+      <div>
+        <a href="/parcelas/" class="btn btn-amber">Empezar</a>
+      </div>
+    </div>
+  </div>
+
+  <a href="/parcelas/" class="home-link">Ver mis parcelas registradas</a>
+</main>
+{% endblock %}
