@@ -1,20 +1,36 @@
+# Entornos
 .env
-/env
-env
+.env.*
 .env.example
+.env.local
+venv/
+.venv/
+env/
+ENV/
 
-.venv
-/.venv
-venv
-.venv
-__pycache__
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 
-./app/__pycache__
-/app/__pycache__
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-.venv
+# IDE
+.vscode/
+.idea/
+.DS_Store
 
-.venv
-./.venv/bin
-./.venv/lib
-./.venv/pyenv.cfg
+# Bases de datos locales
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# Archivos generados del proyecto
+uploads/
+data/processed/
