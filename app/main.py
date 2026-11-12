@@ -15,6 +15,12 @@ app.mount(
     name="static",
 )
 
+app.mount(
+    "/public",
+    StaticFiles(directory=Path(__file__).parent.parent / "public"),
+    name="public",
+)
+
 app.include_router(home_router)
 app.include_router(registro_router, prefix="/registro")
 app.include_router(parcela_router, prefix="/parcelas")

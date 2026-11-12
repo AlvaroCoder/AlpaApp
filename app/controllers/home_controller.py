@@ -8,5 +8,10 @@ templates = Jinja2Templates(directory=Path(__file__).parent.parent / "views" / "
 
 
 @router.get("/", response_class=HTMLResponse)
+async def landing(request: Request):
+    return templates.TemplateResponse("landing.html", {"request": request})
+
+
+@router.get("/app", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request, "usuario": "Don Juan"})
