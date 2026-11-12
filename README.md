@@ -1,4 +1,4 @@
-# AgroRota
+# ALPA
 
 Aplicación web MonoLito FastAPI MVC para registro de cultivos agrícolas con soporte de Deep Learning.
 
